@@ -2,21 +2,22 @@
 include('db.php');
 
 $email = $decodedData['Email'];
-$password = md5($decodedData['Password']); //password is hashed
+$password = ($decodedData['Password']); //password is hashed
 
-$SQL = "SELECT * FROM users WHERE email = '$email'";
+$SQL = "SELECT * FROM adminlog WHERE adminUsername = '$email'";
 $exeSQL = mysqli_query($conn, $SQL);
 $checkEmail =  mysqli_num_rows($exeSQL);
 
 if ($checkEmail != 0) {
     $arrayu = mysqli_fetch_array($exeSQL);
-    if ($arrayu['password'] != $password) {
-        $Message = "Wrong password";
+    if ($arrayu['adminPassword'] != $password) {
+        // $Message = "Wrong password";
+        $Message = $password;
     } else {
         $Message = "Success";
     }
 } else {
-    $Message = "No account yet";
+    $Message = "Sorry admin only";
 }
 
 $response[] = array("Message" => $Message);

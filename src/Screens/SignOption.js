@@ -41,7 +41,7 @@ const SignOption = () => {
         <TouchableOpacity
           style={[styles.button, styles.bgBrown, styles.buttonBorder]}
           onPress={onSignUpPressed}>
-          <Text style={[styles.colorWhite, styles.regText]}> Sign Up </Text>
+          <Text style={[styles.colorWhite, styles.regText]}> Signing Up </Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, {Component} from 'react';
 import {
@@ -8,23 +9,78 @@ import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import navigationStrings from '../constants/navigationStrings';
+import styles from './stylesAdminLog.js';
 
-const AdminLog = () => {
-	const navigation = useNavigation();
-  const onForgotPassPressed = () => {
-    navigation.navigate(navigationStrings.CHANGEPASSADMIN);
-  };
-  const onUserLogPressed = () => {
-    navigation.navigate(navigationStrings.LOGIN);
-  };
-  const onSignInPressed = () => {
-    navigation.navigate(navigationStrings.PENDING);
-  };
-  return (
-    <KeyboardAvoidingView style={styles.container}>
+export default class AdminLog extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      adminUsername : '',
+      adminPassword : '',
+      check_textInputChange : false,
+      secureTextEntry : true,
+    };
+  }
+
+  onForgotPassPressed = () => {
+    this.props.navigation.navigate(navigationStrings.CHANGEPASSADMIN);  };
+  onUserLogPressed = () => {
+    this.props.navigation.navigate(navigationStrings.LOGIN);  };
+
+
+  InsertRecord=()=>{
+    var Email = this.state.adminUsername;
+    var Password = this.state.adminPassword;
+
+    if ((Email?.length == 0) || (Password?.length == 0)){
+      alert('Required Field Is Missing!!!');
+    } else {
+      var APIURL = 'http://10.0.2.2/AppointPet/src/Screens/AdminLog.php';
+
+      var headers = {
+        'Accept' : 'application/json',
+        'Content-Type' : 'application/json',
+      };
+
+      var Data = {
+        Email: Email,
+        Password: Password,
+      };
+
+      fetch(APIURL,{
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(Data),
+      })
+      .then((Response)=>Response.json())
+      .then((Response)=>{
+        alert(Response[0].Message);
+        if (Response[0].Message == 'Success') {
+          console.log('true');
+          this.props.navigation.navigate(navigationStrings.PENDING);
+        }
+        console.log(Data);
+      })
+      .catch((error)=>{
+        console.error('ERROR FOUND' + error);
+      });
+    }
+  }
+
+  updateSecureTextEntry(){
+    this.setState({
+      ...this.state,
+      secureTextEntry: !this.state.secureTextEntry,
+    });
+  }
+
+  render() {
+    return (
+      <KeyboardAvoidingView style={styles.container}>
       <View style={styles.margin}>
         <Text style={styles.header}> Hello, Admin! </Text>
         <Text style={styles.subtitle}> Enter your details here. </Text>
@@ -35,23 +91,32 @@ const AdminLog = () => {
           style={[styles.inputField, styles.margin]}
           placeholder="Email"
           placeholderTextColor="#6F4C29"
+          onChangeText={adminUsername=>this.setState({adminUsername})}
+
         />
 
         <TextInput
           style={[styles.inputField, styles.margin]}
           placeholder="Password"
           placeholderTextColor="#6F4C29"
+          secureTextEntry={true}
+          onChangeText={adminPassword=>this.setState({adminPassword})}
+
         />
       </KeyboardAvoidingView>
 
-      <TouchableOpacity onPress={onForgotPassPressed}>
+      <TouchableOpacity  onPress={()=>{
+                  this.onForgotPassPressed();
+                }}>
         <Text style={[styles.bolder, styles.colorWhite]}> Forgot Password? </Text>
       </TouchableOpacity>
 
       <Text style={styles.subtitle}>
         {' '}
         Are you a user?
-        <TouchableOpacity onPress={onUserLogPressed}>
+        <TouchableOpacity  onPress={()=>{
+                  this.onUserLogPressed();
+                }}>
           <Text style={[styles.bolder, styles.colorWhite, styles.marginSignIn]}> Log in here </Text>
         </TouchableOpacity>instead.
       </Text>
@@ -59,101 +124,13 @@ const AdminLog = () => {
       <View style={styles.margin}>
         <TouchableOpacity
           style={[styles.button, styles.bgBrown, styles.buttonBorder]}
-          onPress={onSignInPressed}>
-          <Text style={[styles.colorWhite, styles.regText]}> Sign In </Text>
+          onPress={()=>{
+                  this.InsertRecord();
+                }}>
+          <Text style={styles.colorWhite}> Sign In </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
-  );
-};
-
-export default AdminLog;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#6F4C29',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  header: {
-    fontSize: 40,
-    // fontWeight: '500',
-    color: 'white',
-    textAlign: 'center',
-    fontFamily: 'Poppins-Medium',
-  },
-
-  subtitle: {
-    // fontWeight: '300',
-    fontSize: 14,
-    color: 'white',
-    textAlign: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-    fontFamily: 'Poppins-Light',
-  },
-
-  bolder: {
-    fontFamily: 'Poppins-SemiBold',
-  },
-
-  button: {
-    width: 175,
-    height: 50,
-    borderRadius: 10,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  colorBrown: {
-    color: '#6F4C29',
-  },
-
-  bgWhite: {
-    backgroundColor: 'white',
-  },
-
-  bgBrown: {
-    backgroundColor: '#6F4C29',
-  },
-
-  buttonBorder: {
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: 'white',
-  },
-
-  colorWhite: {
-    color: 'white',
-  },
-
-  margin: {
-    marginTop: 15,
-    marginBottom: 15,
-  },
-
-  inputField: {
-    backgroundColor: 'white',
-    color: '#6F4C29',
-    height: 40,
-    width: 225,
-    borderRadius: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    marginTop: 15,
-    marginBottom: 15,
-    fontFamily: 'Poppins-Regular',
-  },
-
-  regText: {
-    fontFamily: 'Poppins-Regular',
-  },
-
-  marginSignIn: {
-    marginBottom: -9,
-  },
-});
+    );
+  }
+}

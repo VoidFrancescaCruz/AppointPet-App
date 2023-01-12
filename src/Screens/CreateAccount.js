@@ -51,9 +51,9 @@ export default class Signup extends Component {
     } else if (((/[ ]/).test(Password))){
       alert("Don't include space in password!!!");
     }
-    // } else if (Password !== ConfirmPass){
-    //   alert('Password doesnot match!!!');
-    // }
+      else if (Password !== ConfirmPass){
+      alert('Password doesnot match!!!');
+    }
 
 
     else {
@@ -165,12 +165,15 @@ export default class Signup extends Component {
                 }}> Sign in here </Text>instead.
       </Text>
 
-      <Button style={[styles.button, styles.bgBrown, styles.buttonBorder]}
-                title="Sign Up"
-                onPress={()=>{
+      <View style={styles.margin}>
+        <TouchableOpacity
+          style={[styles.button, styles.bgBrown, styles.buttonBorder]}
+          onPress={()=>{
                   this.InsertRecord();
-                }}
-                />
+                }}>
+          <Text style={styles.colorWhite}> Sign Up </Text>
+        </TouchableOpacity>
+      </View>
 
     </KeyboardAvoidingView>
   );

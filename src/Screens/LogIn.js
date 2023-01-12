@@ -35,6 +35,9 @@ export default class LogIn extends Component {
   onSignInPressed = () => {
     this.props.navigation.navigate('CreateAccount');  };
 
+    handleData=async()=>{
+      const userId = await AsyncStorage.getItem('id');
+      }
 
   InsertRecord=()=>{
     var Email = this.state.email;
@@ -111,7 +114,7 @@ export default class LogIn extends Component {
 
         <Text style={[styles.bolder, styles.colorWhite]}
           onPress={()=>{
-                  this.onAdminLogPressed();
+                  this.onForgotPassPressed();
                 }}> Forgot Password? </Text>
       </TouchableOpacity>
 
@@ -121,17 +124,20 @@ export default class LogIn extends Component {
         <TouchableOpacity>
           <Text style={[styles.bolder, styles.colorWhite, styles.marginSignIn]}
            onPress={()=>{
-                  this.onSignInPressed();
+                  this.onAdminLogPressed();
                 }}> Sign in here </Text>
         </TouchableOpacity>instead.
       </Text>
-
-      <Button style={[styles.button, styles.bgBrown, styles.buttonBorder]}
-                title="Log In"
-                onPress={()=>{
+    
+        <View style={styles.margin}>
+        <TouchableOpacity
+          style={[styles.button, styles.bgBrown, styles.buttonBorder]}
+          onPress={()=>{
                   this.InsertRecord();
-                }}
-                />
+                }}>
+          <Text style={styles.colorWhite}> Log In </Text>
+        </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
     );
   }
