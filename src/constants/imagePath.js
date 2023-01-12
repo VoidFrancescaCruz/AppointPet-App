@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable prettier/prettier */
+=======
+>>>>>>> d7c18fa (fuction to class)
 export default {
   icHome: require('../assets/icons/HomeIcon.png'),
   icServices: require('../assets/icons/ServicesIcon.png'),
@@ -9,6 +12,10 @@ export default {
   icPending: require('../assets/icons/PendingIcon.png'),
   icRecord: require('../assets/icons/RecordIcon.png'),
   icOut: require('../assets/icons/LogoutIcon.png'),
+<<<<<<< HEAD
+=======
+  icCalendar: require('../assets/icons/CalendarIcon.png'),
+>>>>>>> d7c18fa (fuction to class)
 
   //Services
   service1: require('../assets/SP/SP_diagnosis.jpg'),

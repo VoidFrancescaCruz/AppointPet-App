@@ -2,7 +2,11 @@
 include('db.php');
 
 $email = $decodedData['Email'];
+<<<<<<< HEAD
 $password = ($decodedData['Password']); //password is hashed
+=======
+$password = $decodedData['Password']; //password is hashed
+>>>>>>> d7c18fa (fuction to class)
 
 $SQL = "SELECT * FROM adminlog WHERE adminUsername = '$email'";
 $exeSQL = mysqli_query($conn, $SQL);

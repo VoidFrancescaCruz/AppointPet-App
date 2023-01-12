@@ -85,7 +85,10 @@ const styles = StyleSheet.create({
     regText: {
       fontFamily: 'Poppins-Regular',
     },
+<<<<<<< HEAD
     
+=======
+>>>>>>> d7c18fa (fuction to class)
   });
 
 export default styles;

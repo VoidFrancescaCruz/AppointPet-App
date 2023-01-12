@@ -1,3 +1,18 @@
 {
+<<<<<<< HEAD
   "java.compile.nullAnalysis.mode": "automatic"
+=======
+  "java.compile.nullAnalysis.mode": "automatic",
+  "cSpell.words": [
+    "ADMINLOG",
+    "APIURL",
+    "arrayu",
+    "Birthdate",
+    "CHANGEPASSWORD",
+    "datetimepicker",
+    "Dela",
+    "Querry",
+    "sched"
+  ]
+>>>>>>> d7c18fa (fuction to class)
 }

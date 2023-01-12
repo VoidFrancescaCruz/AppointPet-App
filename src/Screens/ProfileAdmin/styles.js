@@ -121,7 +121,11 @@ const styles = StyleSheet.create({
 
   modalContainer: {
     width: '85%',
+<<<<<<< HEAD
     height: '66%',
+=======
+    height: 'auto',
+>>>>>>> d7c18fa (fuction to class)
     backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 20,

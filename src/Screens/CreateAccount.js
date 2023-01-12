@@ -1,7 +1,12 @@
 /* eslint-disable prettier/prettier */
+<<<<<<< HEAD
 
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
+=======
+/* eslint-disable no-unused-vars */
+
+>>>>>>> d7c18fa (fuction to class)
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -10,6 +15,10 @@ import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity, Button,
+<<<<<<< HEAD
+=======
+  AppRegistry,
+>>>>>>> d7c18fa (fuction to class)
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import navigationStrings from '../constants/navigationStrings';
@@ -51,9 +60,15 @@ export default class Signup extends Component {
     } else if (((/[ ]/).test(Password))){
       alert("Don't include space in password!!!");
     }
+<<<<<<< HEAD
       else if (Password !== ConfirmPass){
       alert('Password doesnot match!!!');
     }
+=======
+    // } else if (Password !== ConfirmPass){
+    //   alert('Password doesnot match!!!');
+    // }
+>>>>>>> d7c18fa (fuction to class)
 
 
     else {
@@ -100,7 +115,11 @@ export default class Signup extends Component {
         ...this.state,
         confirmSecureTextEntry: !this.state.confirmSecureTextEntry,
     });
+<<<<<<< HEAD
 }
+=======
+  }
+>>>>>>> d7c18fa (fuction to class)
 
   onAdminLogPressed = () => {
     this.props.navigation.navigate(navigationStrings.ADMINLOG);  };
@@ -180,4 +199,8 @@ export default class Signup extends Component {
 }
 }
 
+<<<<<<< HEAD
+=======
+AppRegistry.registerComponent('Signup', () => Signup);
+>>>>>>> d7c18fa (fuction to class)
 

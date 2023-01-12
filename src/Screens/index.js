@@ -21,6 +21,7 @@ export {default as VerifyAccount} from './VerifyAccount';
 export {default as VerifyEmail} from './VerifyEmail';
 export {default as ChangePassword} from './ChangePassword';
 export {default as ChangePasswordAdmin} from './ChangePasswordAdmin';
+<<<<<<< HEAD
 
 // import {AppRegistry} from 'react-native';
 // import App from '../../';
@@ -39,3 +40,5 @@ export {default as ChangePasswordAdmin} from './ChangePasswordAdmin';
 //   );
 // };
 // AppRegistry.registerComponent(appName, () => Root);
+=======
+>>>>>>> d7c18fa (fuction to class)

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable prettier/prettier */
+=======
+>>>>>>> d7c18fa (fuction to class)
 import {StyleSheet} from 'react-native';
 import colors from '../../constants/colors';
 
@@ -203,6 +206,88 @@ const styles = StyleSheet.create({
   fontBold: {
     fontFamily: 'Poppins-Bold',
   },
+<<<<<<< HEAD
+=======
+
+  pickerContainer: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    width: 225,
+    fontFamily: 'Poppins-Regular',
+  },
+
+  pickerStyles: {
+    height: 50,
+    width: 225,
+    color: colors.primary,
+    justifyContent: 'center',
+    backgroundColor: colors.white,
+    fontFamily: 'Poppins-Regular',
+  },
+
+  pickerItemStyles: {
+    color: colors.primary,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 15,
+  },
+
+  pickerItemDisable: {
+    color: colors.black,
+  },
+
+  spaceTop: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+
+  inputDateTime: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  //
+  overlayStyle: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'flex-end',
+    backgroundColor: '#00000066',
+  },
+  headerStyle: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderColor: '#CDCDCD',
+    borderBottomWidth: 1,
+    height: 50,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  inputContainerStyle: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#CAD3DF',
+    borderRadius: 5,
+    marginVertical: 10,
+    marginHorizontal: 10,
+    paddingRight: 10,
+    height: 50,
+  },
+  placeholderStyle: {
+    fontFamily: 'Gill Sans',
+    fontSize: 16,
+    color: '#CDCDCD',
+    marginHorizontal: 10,
+  },
+  textStyle: {
+    fontFamily: 'Gill Sans',
+    fontSize: 16,
+    marginHorizontal: 10,
+  },
+>>>>>>> d7c18fa (fuction to class)
 });
 
 export default styles;
