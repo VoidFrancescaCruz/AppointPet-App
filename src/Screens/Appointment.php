@@ -19,10 +19,11 @@ $petType = $decodedData['PetType'];
 $service = $decodedData['Service'];
 $vet = $decodedData['VetTeam'];
 $scheduleDate = $decodedData['ScheduleDate'];
+$scheduleMonth = $decodedData['ScheduleMonth'];
 $scheduleTime = $decodedData['ScheduleTime'];
 
-$InsertQuerry = "INSERT INTO form(phoneNumber, homeAddress, petName, petGender, petBirthdate, petBreed, petType, services, vetsTeam, schedDate, schedTime) 
-  VALUES('$phoneNumber', '$homeAddress', '$petName', '$petGender', '$petBirth', '$petBreed', '$petType', '$service', '$vet', '$scheduleDate', '$scheduleTime')";
+$InsertQuerry = "INSERT INTO form(phoneNumber, homeAddress, petName, petGender, petBirthdate, petBreed, petType, services, vetsTeam, schedDate, month, schedTime) 
+  VALUES('$phoneNumber', '$homeAddress', '$petName', '$petGender', '$petBirth', '$petBreed', '$petType', '$service', '$vet', '$scheduleDate', '$scheduleMonth', '$scheduleTime')";
 
 $R = mysqli_query($conn, $InsertQuerry);
 

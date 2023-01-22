@@ -5,10 +5,16 @@
     "APIURL",
     "arrayu",
     "Birthdate",
+    "CHANGEPASSADMIN",
     "CHANGEPASSWORD",
+    "CREATEACCOUNT",
     "datetimepicker",
     "Dela",
+    "ellipsize",
+    "PROFILEADMIN",
     "Querry",
-    "sched"
+    "sched",
+    "VERIFYACCOUNT",
+    "VERIFYEMAIL"
   ]
 }

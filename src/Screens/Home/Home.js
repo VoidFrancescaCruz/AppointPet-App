@@ -46,12 +46,12 @@ export default class Home extends React.Component {
       chosenIndex: 0, //Picker
       chosenIndex1: 0, //Picker
       chosenIndex2: 0, //Picker
-      mode: 'date',
       open: false,
       openSd: false,
       openSt: false,
     };
   }
+
 
   InsertRecord=()=>{
     var PhoneNumber = this.state.phoneNumber;
@@ -64,6 +64,7 @@ export default class Home extends React.Component {
     var Service = this.state.service;
     var VetTeam = this.state.vet;
     var ScheduleDate = this.state.scheduleDate;
+    var ScheduleMonth = this.state.scheduleDate.getMonth() + 1;
     var ScheduleTime = this.state.scheduleTime;
 
     var InsertAPIURL = 'http://10.0.2.2/AppointPet/src/Screens/Appointment.php';   //API to render appointment form
@@ -84,6 +85,7 @@ export default class Home extends React.Component {
       Service: Service,
       VetTeam: VetTeam,
       ScheduleDate: ScheduleDate,
+      ScheduleMonth: ScheduleMonth,
       ScheduleTime: ScheduleTime,
     };
 
@@ -96,7 +98,7 @@ export default class Home extends React.Component {
     .then((response)=>response.json()) //check response type of API (CHECK OUTPUT OF DATA IS IN JSON)
     .then((response)=>{
       alert(response[0].Message);       // If data is in JSON => Display alert msg
-          this.props.navigation.navigate('Home');
+          this.props.navigation.navigate(navigationStrings.HOME);
     })
     .catch((error)=>{
       alert('Error Occured' + error);
@@ -182,7 +184,7 @@ export default class Home extends React.Component {
                       </View>
 
                       <TouchableOpacity style={[styles.inputField, styles.inputDateTime]} onPress={() => this.setState({open:!this.state.open})}>
-                        <Text style={styles.pickerItemStyles}> {'Birthdate: ' + format(this.state.petBirth, 'yyyy-MM-dd')} </Text>
+                        <Text style={styles.pickerItemStyles}> {'' + format(this.state.petBirth, 'yyyy-MM-dd')} </Text>
                         <Image source={imagePath.icCalendar} style={{height: 20, width: 20, justifyContent: 'flex-end', marginRight: 15}} />
                       </TouchableOpacity>
                       <DatePicker
@@ -190,6 +192,7 @@ export default class Home extends React.Component {
                         open={this.state.open}
                         date={this.state.petBirth}
                         mode="date"
+                        title="Birthdate"
                         onConfirm={(date)=> this.setState({petBirth: date})}
                         onCancel={() => this.setState({open:!this.state.open})}
                       />
@@ -244,7 +247,7 @@ export default class Home extends React.Component {
                       </View>
 
                       <TouchableOpacity style={[styles.inputField, styles.inputDateTime]} onPress={() => this.setState({openSd:!this.state.openSd})}>
-                        <Text style={styles.pickerItemStyles}> {'Schd Date: ' + format(this.state.scheduleDate, 'yyyy-MM-dd')} </Text>
+                        <Text style={styles.pickerItemStyles}> {'' + format(this.state.scheduleDate, 'yyyy-MM-dd')} </Text>
                         <Image source={imagePath.icCalendar} style={{height: 20, width: 20, justifyContent: 'flex-end', marginRight: 12}} />
                       </TouchableOpacity>
                       <DatePicker
@@ -252,19 +255,23 @@ export default class Home extends React.Component {
                         open={this.state.openSd}
                         date={this.state.scheduleDate}
                         mode="date"
+                        title="Schedule Date"
                         onConfirm={(sDate)=> this.setState({scheduleDate: sDate})}
                         onCancel={() => this.setState({openSd:!this.state.openSd})}
                       />
 
                       <TouchableOpacity style={[styles.inputField, styles.inputDateTime]} onPress={() => this.setState({openSt:!this.state.openSt})}>
-                        <Text style={styles.pickerItemStyles}> {'Schedule Time: ' + format(this.state.scheduleTime, 'KK:mm')} </Text>
-                        <Image source={imagePath.icCalendar} style={{height: 20, width: 20, justifyContent: 'flex-end', marginRight: 15}} />
+                        <Text style={styles.pickerItemStyles}> {'' + format(this.state.scheduleTime, 'KK:mm a')} </Text>
+                        <Image source={imagePath.icClock} style={{height: 20, width: 20, justifyContent: 'flex-end', marginRight: 15}} />
                       </TouchableOpacity>
                       <DatePicker
                         modal={true}
                         open={this.state.openSt}
                         date={this.state.scheduleTime}
                         mode="time"
+                        is24hour={true}
+                        is24hourSource="device"
+                        title="Schedule Time"
                         onConfirm={(sTime)=> this.setState({scheduleTime: sTime})}
                         onCancel={() => this.setState({openSt:!this.state.openSt})}
                       />

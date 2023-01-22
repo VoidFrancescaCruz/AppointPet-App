@@ -9,6 +9,7 @@ export default {
   icRecord: require('../assets/icons/RecordIcon.png'),
   icOut: require('../assets/icons/LogoutIcon.png'),
   icCalendar: require('../assets/icons/CalendarIcon.png'),
+  icClock: require('../assets/icons/ClockIcon.png'),
 
   //Services
   service1: require('../assets/SP/SP_diagnosis.jpg'),

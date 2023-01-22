@@ -32,7 +32,7 @@ export default class LogIn extends Component {
   onAdminLogPressed = () => {
     this.props.navigation.navigate(navigationStrings.ADMINLOG);  };
   onSignInPressed = () => {
-    this.props.navigation.navigate('CreateAccount');  };
+    this.props.navigation.navigate(navigationStrings.CREATEACCOUNT);  };
 
 
   InsertRecord=()=>{
