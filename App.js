@@ -84,7 +84,7 @@ const App = () => {
           try {
             userToken = 'dgdghdghd';
             await AsyncStorage.setItem('userToken', userToken);
-            console.log('user token: ', userToken);
+            // console.log('user token: ', userToken);
           } catch (e) {
             // saving error
           }
@@ -97,7 +97,7 @@ const App = () => {
       signOut: async () => {
         try {
           await AsyncStorage.removeItem('userToken');
-          console.log('user token: ', userToken);
+          // console.log('user token: ', userToken);
         } catch (e) {
           console.log(e);
         }
@@ -118,7 +118,7 @@ const App = () => {
       userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
-        console.log('user token: ', userToken);
+        // console.log('user token: ', userToken);
       } catch (e) {
         // saving error
       }

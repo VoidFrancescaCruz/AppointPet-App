@@ -10,13 +10,14 @@ import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
-  Button,
+  Button, FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import navigationStrings from '../constants/navigationStrings';
 import styles from './styles2.js';
 
 import {AuthContext} from '../components/context';
+import * as Animatable from 'react-native-animatable';
 
 const {signIn} = React.useContext(AuthContext);
 
@@ -26,10 +27,12 @@ export default class LogIn extends Component {
     this.state = {
       email : '',
       password : '',
+      id : '',
+      fname : '',
       check_textInputChange : false,
       secureTextEntry : true,
-      isValidEmail: true,
-      isValidPass: true, 
+      isValidEmail: false,
+      isValidPass: false,
     };
   }
   onForgotPassPressed = () => {
@@ -49,6 +52,8 @@ export default class LogIn extends Component {
   InsertRecord=()=>{
     var Email = this.state.email;
     var Password = this.state.password;
+    var FName = this.state.fname;
+    var Id = this.state.id;
 
     if ((Email?.length == 0) || (Password?.length == 0)){
       alert('Required Field Is Missing!!!');
@@ -63,6 +68,8 @@ export default class LogIn extends Component {
       var Data = {
         Email: Email,
         Password: Password,
+        FName: FName,
+        Id: Id,
       };
 
       fetch(APIURL,{
@@ -74,6 +81,9 @@ export default class LogIn extends Component {
       .then((Response)=>{
         alert(Response[0].Message);
         if (Response[0].Message == 'Success') {
+          this.setState({Id:Response[0].id});
+          this.setState({FName:Response[0].first_name});
+          console.log(FName);
           signIn(Email, Password);
 
           // console.log('true');
@@ -117,7 +127,6 @@ export default class LogIn extends Component {
           placeholderTextColor="#6F4C29"
           onChangeText={email=>this.setState({email})}
         />
-
         <TextInput
           style={[styles.inputField, styles.margin]}
           placeholder="Password"

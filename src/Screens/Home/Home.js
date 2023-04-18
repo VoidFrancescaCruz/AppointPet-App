@@ -49,9 +49,9 @@ export default class Home extends React.Component {
       open: false,
       openSd: false,
       openSt: false,
+      fname: '',
     };
   }
-
 
   InsertRecord=()=>{
     var PhoneNumber = this.state.phoneNumber;

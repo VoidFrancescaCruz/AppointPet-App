@@ -27,6 +27,13 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontFamily: 'Poppins-Light',
       },
+
+      errorMsg : {
+        fontSize: 14,
+        color: 'white',
+        textAlign: 'center',
+        fontFamily: 'Poppins-Light',
+      },
     
       bolder: {
         // fontWeight: '500',

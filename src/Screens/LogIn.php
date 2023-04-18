@@ -49,8 +49,13 @@
 
 include('db.php');
 
-$email = $decodedData['Email'];
-$password = md5($decodedData['Password']); //password is hashed
+$encodedData = file_get_contents('php://input');
+$decodedData = json_decode($encodedData, true);
+
+$email = isset($decodedData['Email']);
+$password = isset($decodedData['Password']); //password is hashed
+
+$password = md5($password);
 
 $SQL = "SELECT * FROM users WHERE email = '$email'";
 $exeSQL = mysqli_query($conn, $SQL);
