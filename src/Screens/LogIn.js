@@ -14,6 +14,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import navigationStrings from '../constants/navigationStrings';
 import styles from './styles2.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 export default class LogIn extends Component {
@@ -64,10 +66,23 @@ export default class LogIn extends Component {
         alert(Response[0].Message);
         if (Response[0].Message == 'Success') {
           console.log('true');
-          this.props.navigation.navigate(navigationStrings.HOME);
+          
         }
-        console.log(Data);
-      })
+
+        AsyncStorage.setItem("Email", Data.Email)
+          .then(() => {
+            console.log(Data);
+            console.log('Data stored successfully.');
+          })
+
+          .catch(error => {
+            console.error('Failed to store data:', error);
+          });
+
+          this.props.navigation.navigate(navigationStrings.HOME);
+
+        })
+
       .catch((error)=>{
         console.error('ERROR FOUND' + error);
       });

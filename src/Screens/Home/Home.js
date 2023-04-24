@@ -19,6 +19,8 @@ import navigationStrings from '../../constants/navigationStrings';
 import {Picker} from '@react-native-picker/picker';
 import DatePicker from 'react-native-date-picker';
 import { format } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default class Home extends React.Component {
   onSeaAllPressed = () => {
@@ -49,6 +51,7 @@ export default class Home extends React.Component {
       open: false,
       openSd: false,
       openSt: false,
+      data: null,
     };
   }
 
@@ -118,11 +121,30 @@ export default class Home extends React.Component {
         confirmSecureTextEntry: !this.state.confirmSecureTextEntry,
     });
   }
+
+  componentDidMount() {
+    // Retrieve data from AsyncStorage when the component mounts
+    AsyncStorage.getItem("Email")
+      .then(value => {
+        this.setState({ data: value }); // Update the state with the retrieved data
+      })
+      .catch(error => {
+        console.error('Failed to retrieve data:', error);
+      });
+  }
+
   render() {
+
+    const { data } = this.state;
+
     return (
       <ScrollView>
         <View style={[styles.container, styles.secondary]}>
-          <Text style={[styles.header0, styles.fontSemiBold]}>Hello, User!</Text>
+          {data ? (
+            <Text style={[styles.header0, styles.fontSemiBold]}> {`Hello, ${data}!`} </Text>
+          ) : (
+            <Text>Loading data...</Text>
+          )}
           <Text style={[styles.header1, styles.fontMedium,{color: colors.black}]}>
             The best care for your pet is now available on a mobile app. Book an
             appointment today!
