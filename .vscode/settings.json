@@ -1,0 +1,20 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "cSpell.words": [
+    "ADMINLOG",
+    "APIURL",
+    "arrayu",
+    "Birthdate",
+    "CHANGEPASSADMIN",
+    "CHANGEPASSWORD",
+    "CREATEACCOUNT",
+    "datetimepicker",
+    "Dela",
+    "ellipsize",
+    "PROFILEADMIN",
+    "Querry",
+    "sched",
+    "VERIFYACCOUNT",
+    "VERIFYEMAIL"
+  ]
+}
