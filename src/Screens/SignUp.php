@@ -2,34 +2,38 @@
 include('db.php');
 
 
-$encodedData = file_get_contents('php://input');
-$decodedData = json_decode($encodedData, true);
+// Getting the received JSON into $json variable.
+$json = file_get_contents('php://input');
 
-$firstName = isset($decodedData['FirstName']);
-$lastName = isset($decodedData['LastName']);
-$email = isset($decodedData['Email']);
-$password = isset($decodedData['Password']); //password is hashed
-$password = md5($password);
+// decoding the received JSON and store into $obj variable.
+$obj = json_decode($json, true);
+
+
+$firstName = $decodedData['FirstName'];
+$lastName = $decodedData['LastName'];
+$email = $decodedData['Email'];
+$password = md5($decodedData['Password']); //password is hashed
+
 // $SQL = "SELECT * FROM users WHERE first_name = '$firstName', last_name = '$lastName', email = '$email' ";
 $SQL = "SELECT * FROM users WHERE first_name = '$firstName' AND last_name = '$lastName' AND email = '$email' ";
 $exeSQL = mysqli_query($conn, $SQL);
 $checkEmail = mysqli_num_rows($exeSQL);
 
 if ($checkEmail != 0) {
-    $Message = "Already registered";
+$Message = "Already registered";
 } else {
 
-    $InsertQuerry = "INSERT INTO users(first_name, last_name, email, password) VALUES('$firstName ', '$lastName', '$email', '$password' )";
-    // $InsertQuerry = "INSERT INTO users(first_name, password) VALUES('$firstName', '$password' )";
+$InsertQuerry = "INSERT INTO users(first_name, last_name, email, password) VALUES('$firstName ', '$lastName', '$email', '$password' )";
+// $InsertQuerry = "INSERT INTO users(first_name, password) VALUES('$firstName', '$password' )";
 
 
-    $R = mysqli_query($conn, $InsertQuerry);
+$R = mysqli_query($conn, $InsertQuerry);
 
-    if ($R) {
-        $Message = "Complete--!";
-    } else {
-        $Message = "Error";
-    }
+if ($R) {
+$Message = "Successfully Created an Account!";
+} else {
+$Message = "Error";
+}
 }
 $response[] = array("Message" => $Message);
 

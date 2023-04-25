@@ -5,8 +5,10 @@ import {View, Text} from 'react-native';
 import styles from './styles';
 import Select from '../../constants/Select';
 import TableAppointment from '../../constants/TableAppointment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Appointment = () => {
+export default class Appointment extends React.Component {
+  render() {
   return (
       <View style={styles.container}>
         <View style={styles.pageTitleContainer}>
@@ -18,6 +20,6 @@ const Appointment = () => {
         <TableAppointment />
       </View>
   );
-};
+}
 
-export default Appointment;
+}

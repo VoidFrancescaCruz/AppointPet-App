@@ -1,13 +1,8 @@
 <?php
 include('db.php');
 
-
-// Getting the received JSON into $json variable.
-$json = file_get_contents('php://input');
-
-// decoding the received JSON and store into $obj variable.
-$obj = json_decode($json, true);
-
+$encodedData = file_get_contents('php://input');
+$decodedData = json_decode($encodedData, true);
 
 $phoneNumber = $decodedData['PhoneNumber'];
 $homeAddress = $decodedData['HomeAddress'];
@@ -22,17 +17,32 @@ $scheduleDate = $decodedData['ScheduleDate'];
 $scheduleMonth = $decodedData['ScheduleMonth'];
 $scheduleTime = $decodedData['ScheduleTime'];
 
-$InsertQuerry = "INSERT INTO form(phoneNumber, homeAddress, petName, petGender, petBirthdate, petBreed, petType, services, vetsTeam, schedDate, month, schedTime) 
-  VALUES('$phoneNumber', '$homeAddress', '$petName', '$petGender', '$petBirth', '$petBreed', '$petType', '$service', '$vet', '$scheduleDate', '$scheduleMonth', '$scheduleTime')";
+$email = $decodedData['Email'];
+
+$SQL = "SELECT first_name, last_name FROM users WHERE email = '$email'";
+$exeSQL = mysqli_query($conn, $SQL);
+$checkEmail =  mysqli_num_rows($exeSQL);
+
+if ($checkEmail > 0) {
+	$arrayu = mysqli_fetch_array($exeSQL);
+	$FName = $arrayu['first_name'];
+	$LName = $arrayu['last_name'];
+} else {
+	$FName = "";
+	$FName = "";
+}
+
+$InsertQuerry = "INSERT INTO form(firstName, lastName, email, phoneNumber, homeAddress, petName, petGender, petBirthdate, petBreed, petType, services, vetsTeam, schedDate, month, schedTime) 
+  VALUES('$FName', '$LName', '$email', '$phoneNumber', '$homeAddress', '$petName', '$petGender', '$petBirth', '$petBreed', '$petType', '$service', '$vet', '$scheduleDate', '$scheduleMonth', '$scheduleTime')";
 
 $R = mysqli_query($conn, $InsertQuerry);
 
 if ($R) {
-	$Message = "Inserted--!";
+	$Message = "Successfully Scheduled an Appointment";
 } else {
 	$Message = "Error";
 }
 
 $response[] = array("Message" => $Message);
 
-echo json_encode($response);?>
+echo json_encode($response);

@@ -1,9 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {Component, useState, useEffect} from 'react';
+import React, {Component, useState} from 'react';
 import {
   ScrollView,
   View,
@@ -21,22 +19,10 @@ import navigationStrings from '../../constants/navigationStrings';
 import {Picker} from '@react-native-picker/picker';
 import DatePicker from 'react-native-date-picker';
 import { format } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default class Home extends React.Component {
-
-  getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('userToken');
-      if (value !== null) {
-        console.log('Data loaded successfully:', value);
-        return value;
-      }
-    } catch (error) {
-      console.log('Error loading data:', error);
-    }
-  };
-
   onSeaAllPressed = () => {
     this.props.navigation.navigate(navigationStrings.SERVICES);
   }
@@ -53,6 +39,7 @@ export default class Home extends React.Component {
       petType: '',
       service: '',
       vet: '',
+      FName: '',
       scheduleDate: new Date(),
       scheduleTime: new Date(),
       check_textInputChange : false,
@@ -65,9 +52,10 @@ export default class Home extends React.Component {
       open: false,
       openSd: false,
       openSt: false,
-      fname: '',
+      data: null,
     };
   }
+
 
   InsertRecord=()=>{
     var PhoneNumber = this.state.phoneNumber;
@@ -83,42 +71,48 @@ export default class Home extends React.Component {
     var ScheduleMonth = this.state.scheduleDate.getMonth() + 1;
     var ScheduleTime = this.state.scheduleTime;
 
-    var InsertAPIURL = 'http://10.0.2.2/april21-cesca/AppointPet-App/src/Screens/Appointment.php';   //API to render appointment form
-
-    var headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-
-    var Data = {
-      PhoneNumber: PhoneNumber,
-      HomeAddress: HomeAddress,
-      PetName: PetName,
-      PetGender: PetGender,
-      PetBirth: PetBirth,
-      PetBreed: PetBreed,
-      PetType: PetType,
-      Service: Service,
-      VetTeam: VetTeam,
-      ScheduleDate: ScheduleDate,
-      ScheduleMonth: ScheduleMonth,
-      ScheduleTime: ScheduleTime,
-    };
-
-    // FETCH func ------------------------------------
-    fetch(InsertAPIURL,{
-        method:'POST',
-        headers:headers,
-        body: JSON.stringify(Data), //convert data to JSON
-    })
-    .then((response)=>response.json()) //check response type of API (CHECK OUTPUT OF DATA IS IN JSON)
-    .then((response)=>{
-      alert(response[0].Message);       // If data is in JSON => Display alert msg
+    // Retrieve data from AsyncStorage when the component mounts
+    AsyncStorage.getItem('userToken')
+      .then(value => {
+        this.setState({ data: value }); // Update the state with the retrieved data  
+        var { data } = this.state;
+        var InsertAPIURL = 'http://10.0.2.2/april21-cesca/AppointPet-App/src/Screens/Appointment.php';   //API to render appointment form
+        var headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        };
+        var Data = {
+          Email: data,
+          PhoneNumber: PhoneNumber,
+          HomeAddress: HomeAddress,
+          PetName: PetName,
+          PetGender: PetGender,
+          PetBirth: PetBirth,
+          PetBreed: PetBreed,
+          PetType: PetType,
+          Service: Service,
+          VetTeam: VetTeam,
+          ScheduleDate: ScheduleDate,
+          ScheduleMonth: ScheduleMonth,
+          ScheduleTime: ScheduleTime,
+        };
+        fetch(InsertAPIURL,{
+            method:'POST',
+            headers:headers,
+            body: JSON.stringify(Data),
+        })
+        .then((Response)=>Response.json())
+        .then((Response)=>{
+          alert(Response[0].Message);       // If data is in JSON => Display alert msg
           this.props.navigation.navigate(navigationStrings.HOME);
-    })
-    .catch((error)=>{
-      alert('Error Occured' + error);
-    });
+        })
+        .catch((error)=>{
+          alert('Error Occured1' + error);
+        });
+      })
+      .catch(error => {
+        console.error('Failed to retrieve data:', error);
+      });
   }
 
   updateSecureTextEntry(){
@@ -135,12 +129,50 @@ export default class Home extends React.Component {
     });
   }
 
-
+  componentDidMount() {
+    // Retrieve data from AsyncStorage when the component mounts
+    AsyncStorage.getItem('userToken')
+      .then(value => {
+        this.setState({ data: value }); // Update the state with the retrieved data
+        var { data } = this.state;
+        var stringifiedData = JSON.stringify(data);
+        var InsertAPIURL = 'http://10.0.2.2/april21-cesca/AppointPet-App/src/Screens/getUser.php';
+        var headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        };
+        var Data = {
+          Email: data,
+        };
+        fetch(InsertAPIURL,{
+            method:'POST',
+            headers:headers,
+            body: JSON.stringify(Data),
+        })
+        .then((Response)=>Response.json())
+        .then((Response)=>{
+          // this.props.navigation.navigate(navigationStrings.HOME);
+          var FName = Response[0].FirstName;
+          this.setState({ FName });
+        })
+        .catch((error)=>{
+          alert('Error Occured1' + error);
+        });
+      })
+      .catch(error => {
+        console.error('Failed to retrieve data:', error);
+      });
+  }
   render() {
     return (
       <ScrollView>
         <View style={[styles.container, styles.secondary]}>
-          <Text style={[styles.header0, styles.fontSemiBold]}>Hi</Text>
+          {/* {FName ? (
+            <Text style={[styles.header0, styles.fontSemiBold]}> {`Hello, ${stringifiedData}!`} </Text>
+          ) : (
+            <Text>Loading data...</Text>
+          )} */}
+          <Text style={[styles.header0, styles.fontSemiBold]}> Hi {this.state.FName}! </Text>
           <Text style={[styles.header1, styles.fontMedium,{color: colors.black}]}>
             The best care for your pet is now available on a mobile app. Book an
             appointment today!

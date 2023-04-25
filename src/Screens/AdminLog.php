@@ -11,8 +11,8 @@ $checkEmail =  mysqli_num_rows($exeSQL);
 if ($checkEmail != 0) {
     $arrayu = mysqli_fetch_array($exeSQL);
     if ($arrayu['adminPassword'] != $password) {
-        // $Message = "Wrong password";
-        $Message = $password;
+        $Message = "Wrong password";
+        // $Message = $password;
     } else {
         $Message = "Success";
     }
