@@ -10,10 +10,11 @@ export default class TableAppointment extends React.Component {
     super(props);
     this.state = {
       Name: '',
-      data: null,
+      data: [],
     };
   }
 
+  /*
   componentDidMount() {
     // Retrieve data from AsyncStorage when the component mounts
     AsyncStorage.getItem('userToken')
@@ -22,7 +23,7 @@ export default class TableAppointment extends React.Component {
   
         var { data } = this.state;
   
-        var InsertAPIURL = 'http://10.0.2.2/april21-cesca/AppointPet-App/src/Screens/tableAppoinment.php';
+        var InsertAPIURL = 'http://10.0.2.2/AppointPet-App/src/Screens/tableAppoinment.php';
         
         var headers = {
           'Accept': 'application/json',
@@ -52,13 +53,50 @@ export default class TableAppointment extends React.Component {
         console.error('Failed to retrieve data:', error);
       });
   }
+  */
 
+  // Run the tableAppointment php file when the user opens this page.
+
+  componentDidMount() {
+    fetch('http://10.0.2.2/AppointPet-App/src/Screens/tableAppointment.php')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data); // Debug the response
+        this.setState({ data });
+      })
+      .catch(error => console.log(error));
+  }
+
+  /*
+  componentDidMount() {
+    AsyncStorage.getItem("params").then(email => {
+      
+      console.log('Retrieved email:', email);
+      
+      const encodedEmail = encodeURIComponent(email);
+
+      console.log(encodedEmail);
+
+      const encodedURI = encodeURI(`http://10.0.2.2/AppointPet-App/src/Screens/tableAppointment.php?email=${encodedEmail}`);
+
+      console.log(encodedURI);
+      
+      fetch(encodedURI)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({ data });
+          console.log('Data received:', data);
+        })
+        .catch(error => console.log(error));
+    });
+  }
+  */
 
   render() {
     return (
       <View style={styles.container}>
         <View style={[styles.headerContainer, styles.row, styles.fontMedium]}>
-          <Text style={[styles.white, styles.fontMedium]}> {this.state.Name} </Text>
+          <Text style={[styles.white, styles.fontMedium]}> Name </Text>
           <Text style={[styles.white, styles.fontMedium]}> Pet </Text>
           <Text style={[styles.white, styles.fontMedium]}> Services </Text>
           <Text style={[styles.white, styles.fontMedium]}> Date </Text>
@@ -93,42 +131,17 @@ export default class TableAppointment extends React.Component {
             <Text style={[styles.black, styles.fontReg]}> 1:30PM </Text>
           </View>
 
-          <View style={styles.row}>
-            <Text style={[styles.black, styles.fontReg]}> Ipsum {'\n'} Lorem </Text>
-            <Text style={[styles.black, styles.fontReg]}> Daisy </Text>
-            <Text style={[styles.black, styles.fontReg]}>
-              {' '}
-              Diagnostic {'\n'} and {'\n'} Therapeutic{' '}
-            </Text>
-            <Text style={[styles.black, styles.fontReg]}> 12/07/22 </Text>
-            <Text style={[styles.black, styles.fontReg]}> 1:30PM </Text>
-          </View>
-
-          <View style={[styles.row, styles.evenRows]}>
-            <Text style={[styles.black, styles.fontReg]}> Lorem {'\n'} Ipsum </Text>
-            <Text style={[styles.black, styles.fontReg]}> Choco </Text>
-            <Text style={[styles.black, styles.fontReg]}> Vaccine </Text>
-            <Text style={[styles.black, styles.fontReg]}> 12/07/22 </Text>
-            <Text style={[styles.black, styles.fontReg]}> 1:30PM </Text>
-          </View>
-
-          <View style={styles.row}>
-            <Text style={[styles.black, styles.fontReg]}> Ipsum {'\n'} Lorem </Text>
-            <Text style={[styles.black, styles.fontReg]}> Daisy </Text>
-            <Text style={[styles.black, styles.fontReg]}>
-              {' '}
-              Diagnostic {'\n'} and {'\n'} Therapeutic{' '}
-            </Text>
-            <Text style={[styles.black, styles.fontReg]}> 12/07/22 </Text>
-            <Text style={[styles.black, styles.fontReg]}> 1:30PM </Text>
-          </View>
-
-          <View style={[styles.row, styles.evenRows]}>
-            <Text style={[styles.black, styles.fontReg]}> Lorem {'\n'} Ipsum </Text>
-            <Text style={[styles.black, styles.fontReg]}> Choco </Text>
-            <Text style={[styles.black, styles.fontReg]}> Vaccine </Text>
-            <Text style={[styles.black, styles.fontReg]}> 12/07/22 </Text>
-            <Text style={[styles.black, styles.fontReg]}> 1:30PM </Text>
+          <View>
+          {/* Display the rows in sql query, show the scheduled dates made by the user. */}
+            {this.state.data.map((item, index) => (
+              <View style={styles.row} key={index}>
+                <Text style={[styles.black, styles.fontReg]}> {item.firstName} {item.lastName} </Text>
+                <Text style={[styles.black, styles.fontReg]}> {item.petName} </Text>
+                <Text style={[styles.black, styles.fontReg]}> {item.services} </Text>
+                <Text style={[styles.black, styles.fontReg]}> {item.schedDate} </Text>
+                <Text style={[styles.black, styles.fontReg]}> {item.schedTime} </Text>
+              </View>
+            ))}
           </View>
         </ScrollView>
       </View>

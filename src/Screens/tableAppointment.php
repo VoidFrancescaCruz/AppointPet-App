@@ -1,11 +1,15 @@
 <?php
 
+/*
+
 include('db.php');
 
 $encodedData = file_get_contents('php://input');
 $decodedData = json_decode($encodedData, true);
 
 $email = $decodedData['UserAppointment'];
+
+echo "Nani";
 
 if (empty($email)) {
     $response[] = array("Message" => "Email parameter is missing");
@@ -38,3 +42,28 @@ if ($checkPets > 0) {
 }
 
 $response = array("message" => $message, "appointment" => $appointments, "Name" => $Name);
+
+*/
+
+    include('db.php');  // Connect to database
+
+    $email = "j@gmail.com"; // Hard-coded email
+    //$emailTwo = $_GET["email"];
+
+    //echo $emailTwo;
+
+    $sql = "SELECT * FROM form WHERE email = '$email'"; // Select all rows with the user email.
+    $result = $conn->query($sql);
+
+    $rows = array();  // Store results in an array
+
+    while($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    
+    echo json_encode($rows); // Return results as JSON
+
+    $conn->close(); // Close connection
+?>
+
+
