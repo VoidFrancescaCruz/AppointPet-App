@@ -18,6 +18,8 @@ import styles from './styles2.js';
 
 import {AuthContext} from '../components/context';
 import * as Animatable from 'react-native-animatable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const {signIn} = React.useContext(AuthContext);
 
@@ -59,7 +61,7 @@ export default class LogIn extends Component {
     if ((Email?.length == 0) || (Password?.length == 0)){
       alert('Required Field Is Missing!!!');
     } else {
-      var APIURL = 'http://10.0.2.2/april21-cesca/AppointPet-App/src/Screens/LogIn.php';
+      var APIURL = 'http://10.0.2.2/AppointPet-App/src/Screens/LogIn.php';
 
       var headers = {
         'Accept' : 'application/json',
@@ -93,6 +95,16 @@ export default class LogIn extends Component {
           // alert('email: ', Email);
 
           // console.log('true');
+          AsyncStorage.setItem("params", Data.Email)
+          .then(() => {
+            console.log(Data);
+            console.log('Data stored successfully.');
+          })
+
+          .catch(error => {
+            console.error('Failed to store data:', error);
+          });
+
           this.props.navigation.navigate(navigationStrings.HOME);
         } else {
           var Email1 = '';
