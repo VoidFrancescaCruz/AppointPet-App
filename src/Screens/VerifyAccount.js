@@ -11,49 +11,125 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import navigationStrings from '../constants/navigationStrings';
+//THIS IS FOR VERIFICATION ACCOUNT AFTER SIGNING UP
 
-const VerifyAccount = () => {
-	const navigation = useNavigation();
-  const onVerifyAccountPressed = () => {
-    navigation.navigate(navigationStrings.LOGIN);
+export default class VerifyAccount extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      otp: '',
+      secureTextEntry : true,
+      confirmSecureTextEntry : true,
+    };
+  }
+
+  InsertRecord = () => {
+    var Email = this.state.email;
+    var Otp = this.state.otp;
+    var Id = this.state.id;
+
+    if (Email.length === 0 || Otp.length === 0) {
+      alert('Verification Code Field Is Missing!');
+    } else {
+      var APIURL =
+        'http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/VerifyAccount.php';
+
+      var headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      };
+
+      var Data = {
+        Email: Email,
+        Otp: Otp,
+      };
+
+      fetch(APIURL, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(Data),
+      })
+        .then((Response) => Response.json())
+        .then((Response) => {
+          alert(Response[0].Message);
+          // if (Response[0].Message == 'Success') {
+            // var Email1 = Response[0].Email;
+            // this.context.verifyAcc(Email1, Otp);
+            this.props.navigation.navigate('LogIn');
+          // } else {
+          //   var Email1 = '';
+          //   var Otp = '';
+          //   this.context.verifyAcc(Email1, Otp);
+          // }
+        })
+        .catch((error) => {
+          console.error('ERROR FOUND' + error);
+        });
+    }
   };
-  return (
-		<KeyboardAvoidingView style={styles.container}>
-			<View style={styles.margin}>
-				<Text style={styles.header}> Verification Account </Text>
-				<Text style={styles.subtitle}>
-					{' '}
-					If the email cannot be found on your main box, please check the spam
-					folder instead.{' '}
-				</Text>
-			</View>
 
-			<KeyboardAvoidingView style={styles.margin}>
-				<TextInput
-					style={[styles.inputField, styles.margin]}
-					placeholder="Email"
-					placeholderTextColor="#7A7676"
-				/>
+  updateSecureTextEntry(){
+    this.setState({
+        ...this.state,
+        secureTextEntry: !this.state.secureTextEntry,
+    });
+  }
 
-				<TextInput
-					style={[styles.inputField, styles.margin]}
-					placeholder="Verification Code"
-					placeholderTextColor="#7A7676"
-				/>
-			</KeyboardAvoidingView>
+  updateConfirmSecureTextEntry(){
+    this.setState({
+        ...this.state,
+        confirmSecureTextEntry: !this.state.confirmSecureTextEntry,
+    });
+  }
 
-			<View style={styles.margin}>
-				<TouchableOpacity
-					style={[styles.button, styles.bgBrown]}
-					onPress={onVerifyAccountPressed}>
-					<Text style={[styles.colorWhite, styles.regText]}> Verify </Text>
-				</TouchableOpacity>
-			</View>
-		</KeyboardAvoidingView>
-	);
-};
+  onAdminLogPressed = () => {
+    this.props.navigation.navigate(navigationStrings.ADMINLOG);  };
+  onVerifyAccountPressed = () => {
+      this.props.navigation.navigate(navigationStrings.LOGIN);
+    };
 
-export default VerifyAccount;
+  render() {
+    return (
+      <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.margin}>
+          <Text style={styles.header}> Verification Account </Text>
+          <Text style={styles.subtitle}>
+            {' '}
+            If the email cannot be found on your main box, please check the spam
+            folder instead.{' '}
+          </Text>
+        </View>
+
+        <KeyboardAvoidingView style={styles.margin}>
+          <TextInput
+            style={[styles.inputField, styles.margin]}
+            placeholder="Email"
+            placeholderTextColor="#7A7676"
+            onChangeText={email=>this.setState({email})}
+          />
+
+          <TextInput
+            style={[styles.inputField, styles.margin]}
+            placeholder="Verification Code"
+            placeholderTextColor="#7A7676"
+            onChangeText={otp=>this.setState({otp})}
+          />
+        </KeyboardAvoidingView>
+
+        <View style={styles.margin}>
+          <TouchableOpacity
+            style={[styles.button, styles.bgBrown]}
+            onPress={()=>{
+                  this.InsertRecord();
+                }}>
+            <Text style={[styles.colorWhite, styles.regText]}> Verify </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

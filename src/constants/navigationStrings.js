@@ -17,8 +17,8 @@ export default {
   LOGIN: 'LogIn',
   CREATEACCOUNT: 'CreateAccount',
   ADMINLOG: 'AdminLog',
-  VERIFYACCOUNT: 'VerifyAccount',
-  VERIFYEMAIL: 'VerifyEmail', //admin
+  VERIFYACCOUNT: 'VerifyAccount', //after sign up
+  VERIFYEMAIL: 'VerifyEmail', //forgot pass
   CHANGEPASSWORD: 'ChangePassword',
   CHANGEPASSADMIN: 'ChangePasswordAdmin',
 };

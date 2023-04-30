@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import navigationStrings from '../constants/navigationStrings';
-
+//THIS IS FOR FORGOT PASSWORD
 const VerifyEmail = () => {
 	const navigation = useNavigation();
   const onVerifyEmailPressed = () => {

@@ -15,7 +15,6 @@ import { useNavigation } from '@react-navigation/native';
 import navigationStrings from '../constants/navigationStrings';
 import styles from './style';
 
-import axios from 'axios';
 
 export default class Signup extends Component {
   constructor(props) {
@@ -82,29 +81,13 @@ export default class Signup extends Component {
     .then((response)=>response.json()) //check response type of API (CHECK OUTPUT OF DATA IS IN JSON)
     .then((response)=>{
       alert(response[0].Message);       // If data is in JSON => Display alert msg
-          this.props.navigation.navigate('LogIn');
+          this.props.navigation.navigate('VerifyAccount');
     })
     .catch((error)=>{
-      alert('Error Occured' + error);
+      alert('Error Occurred' + error);
     });
     }
-  }
-
-  SendEmail=()=>{
-    axios.post('http://10.0.2.2/april27/AppointPet-App/src/Screens/SignUp.php', {
-      to: 'chelsea.xurpas@gmail.com',
-      subject: 'Test email',
-      body: 'Hello world!',
-      smtpUsername: 'appointpet@gmail.com',
-      smtpPassword: 'appoinpet2022',
-    })
-    .then(response => {
-      console.log('Email sent successfully!');
-    })
-    .catch(error => {
-      console.error('Error sending email:', error);
-    });
-  }
+  };
 
   updateSecureTextEntry(){
     this.setState({
@@ -188,7 +171,6 @@ export default class Signup extends Component {
           style={[styles.button, styles.bgBrown, styles.buttonBorder]}
           onPress={()=>{
                   this.InsertRecord();
-                  this.SendEmail();
                 }}>
           <Text style={styles.colorWhite}> Sign Up </Text>
         </TouchableOpacity>
