@@ -57,6 +57,9 @@ export default class Home extends React.Component {
       openSd: false,
       openSt: false,
       data: null,
+      dataVets: [],
+      jsonVets: [],
+      errorVets: '',
     };
   }
 
@@ -113,7 +116,7 @@ export default class Home extends React.Component {
           this.props.navigation.navigate(navigationStrings.HOME);
         })
         .catch((error)=>{
-          alert('Error Occured1' + error);
+          alert('Error Occured 1' + error);
         });
       })
       .catch(error => {
@@ -140,6 +143,7 @@ export default class Home extends React.Component {
       const email = await AsyncStorage.getItem('userToken');
       this.setState({ email }, () => {
         this.handlePress();
+        this.loadData();
       });
     } catch (error) {
       console.log(error);
@@ -175,6 +179,7 @@ export default class Home extends React.Component {
 
   // };
 
+
   handlePress = () => {
     fetch('http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/getUser.php', {
       method: 'POST',
@@ -197,10 +202,52 @@ export default class Home extends React.Component {
         console.log(error);
         this.setState({ error: 'An error occurred', message: null, firstName: null });
       });
+
+    fetch('http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/services.php')
+      .then(response => response.json())
+      .then(data => {
+        if (data.Message === 'Success') {
+          const decodedData = data.Rows.map(row => ({
+            ...row,
+            serviceImage: `data:image/jpg;base64,${row.serviceImage}`,
+          }));
+          // console.log(data.Rows);
+          this.setState({ data: decodedData });
+        } else {
+          this.setState({ error: data.Message });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ error: 'An error occurred' });
+      });
   };
 
+  loadData = () => {
+    fetch('http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/vets.php')
+      .then(response => response.json())
+      .then(data => {
+        if (data.Message === 'Success') {
+          const decodedData = data.Rows.map(row => ({
+            ...row,
+            vetImage: `data:image/jpg;base64,${row.vetImage}`,
+          }));
+          // console.log(data.Rows);
+          this.setState({ jsonVets: decodedData });
+        } else {
+          this.setState({ errorVets: data.Message });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ error: 'An error occurred' });
+      });
+  }
+
   render() {
-    const { message, firstName, error } = this.state;
+    const { message, firstName, error, data, dataVets } = this.state;
+    const { jsonVets, errorVets } = this.state;
+
     return (
       <ScrollView>
         <View style={[styles.container, styles.secondary]}>
@@ -312,15 +359,9 @@ export default class Home extends React.Component {
                           mode= "dropdown"
                           onValueChange={(itemValue, itemPosition) => this.setState({service: itemValue, chosenIndex1: itemPosition})}>
                           <Picker.Item style={[styles.pickerItemStyles, styles.pickerItemDisable]} label="Services" value="" enabled={false}/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Diagnosis and Therapeutic" value="Diagnosis and Therapeutic"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Surgical" value="Surgical"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Vaccine" value="Vaccine"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Consultation" value="Consultation"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Laboratory" value="Laboratory"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Dentistry" value="Dentistry"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Radiology" value="Radiology"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Pharmacy" value="Pharmacy"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Pet Grooming" value="Pet Grooming"/>
+                          {data && data.map((row, i) => (
+                            <Picker.Item  key={i} style={styles.pickerItemStyles} label={row.serviceName} value={row.serviceName}/>
+                            ))}
                         </Picker>
                       </View>
                       <View style={[styles.pickerContainer, styles.spaceTop]}>
@@ -330,9 +371,11 @@ export default class Home extends React.Component {
                           mode= "dropdown"
                           onValueChange={(itemValue, itemPosition) => this.setState({vet: itemValue, chosenIndex2: itemPosition})}>
                           <Picker.Item style={[styles.pickerItemStyles, styles.pickerItemDisable]} label="Veterinarian's Team" value="" enabled={false}/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Dr. Dela Cruz Team 1" value="Dr. Dela Cruz Team 1"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Dr. Dela Cruz Team 2" value="Dr. Dela Cruz Team 2"/>
-                          <Picker.Item style={styles.pickerItemStyles} label="Dr. Dela Cruz Team 3" value="Dr. Dela Cruz Team 3"/>
+                          {dataVets && dataVets.map((rowV, j) => (
+                            <Picker.Item style={styles.pickerItemStyles} label={rowV.serviceVets} value={rowV.serviceVets}/>
+                            ))}
+                          {/* <Picker.Item style={styles.pickerItemStyles} label="Dr. Dela Cruz Team 2" value="Dr. Dela Cruz Team 2"/>
+                          <Picker.Item style={styles.pickerItemStyles} label="Dr. Dela Cruz Team 3" value="Dr. Dela Cruz Team 3"/> */}
                         </Picker>
                       </View>
 
@@ -369,7 +412,7 @@ export default class Home extends React.Component {
                   </View>
                   <View style={styles.margin}>
                     <TouchableOpacity style={styles.button}
-                      onPress={()=>{this.InsertRecord();}}>
+                      onPress={()=>{this.InsertRecord(); this.setState({ isVisible:!this.state.isVisible});}}>
                       <Text style={[styles.white, styles.fontReg]}> Set Appointment </Text>
                     </TouchableOpacity>
                   </View>
@@ -390,70 +433,25 @@ export default class Home extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-
         <View style={[styles.container1, styles.secondary]}>
-          <View style={styles.dropShadow}>
-            <TouchableOpacity style={[styles.container2]} onPress={()=>{this.onSeaAllPressed();}}>
-              <Image source={imagePath.service1} style={styles.servicesImg} />
-              <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
-                Diagnosis and Therapeutic
-              </Text>
-              <Text style={[styles.header4, styles.fontMedium, {color: colors.black}]}>
-                Price
-              </Text>
-              <Text style={[styles.normalTxt, styles.fontReg]}>
-                A diagnostic process to find out the true
-                cause of your pet’s symptoms.
-              </Text>
-            </TouchableOpacity>
+        {data && data.map((rowS, k) => (
+          <View style={[styles.vetsContainer, styles.secondary]} key={k}>
+            <View style={styles.dropShadow}>
+              <TouchableOpacity style={[styles.container2]} onPress={()=>{this.onSeaAllPressed();}}>
+                <Image source={{uri: rowS.serviceImage}} style={styles.servicesImg} />
+                <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
+                  {rowS.serviceName}
+                </Text>
+                <Text style={[styles.header4, styles.fontMedium, {color: colors.black}]}>
+                  {rowS.servicePrice}
+                </Text>
+                <Text style={[styles.normalTxt, styles.fontReg]}>
+                  {rowS.serviceSummary}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.dropShadow}>
-            <TouchableOpacity style={[styles.container2]} onPress={()=>{this.onSeaAllPressed();}}>
-              <Image source={imagePath.service2} style={styles.servicesImg} />
-              <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
-                Surgical
-              </Text>
-              <Text style={[styles.header4, styles.fontMedium, {color: colors.black}]}>
-                Price
-              </Text>
-              <Text style={[styles.normalTxt, styles.fontReg]}>
-                Performing surgery and provide follow-up
-                care to promote healing.
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={[styles.container1, styles.secondary]}>
-          <View>
-            <TouchableOpacity style={styles.container2} onPress={()=>{this.onSeaAllPressed();}}>
-              <Image source={imagePath.service3} style={styles.servicesImg} />
-              <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
-                Vaccine
-              </Text>
-              <Text style={[styles.header4, styles.fontMedium, {color: colors.black}]}>
-                Price
-              </Text>
-              <Text style={[styles.normalTxt, styles.fontReg]}>
-                Stimulating an immune response in an animal
-                without causing the disease itself.
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity style={styles.container2} onPress={()=>{this.onSeaAllPressed();}}>
-              <Image source={imagePath.service4} style={styles.servicesImg} />
-              <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
-                Consultation
-              </Text>
-              <Text style={[styles.header4, styles.fontMedium, {color: colors.black}]}>
-                Price
-              </Text>
-              <Text style={[styles.normalTxt, styles.fontReg]}>
-                Discussing concerns and services about
-                the well-being of pets.
-              </Text>
-            </TouchableOpacity>
-          </View>
+        ))}
         </View>
 
         <View style={[styles.container, styles.secondary]}>
@@ -471,33 +469,28 @@ export default class Home extends React.Component {
         </View>
 
         <View style={[styles.container1, styles.secondary]}>
-          <Text style={[styles.header0, styles.fontSemiBold]}>Our Team</Text>
+          <Text style={[styles.header0, styles.fontSemiBold]}>Our Teams</Text>
         </View>
         <View style={[styles.container1, styles.secondary]}>
-          <View style={styles.dropShadow}>
-            <View style={[styles.container2]}>
-              <Image source={imagePath.service1} style={styles.servicesImg} />
-              <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
-                Dr. Juan Dela Cruz's Team 1
-              </Text>
-              <Text style={[styles.normalTxt, styles.fontReg]}>
-                They diagnose, treat, and research medical conditions
-                and diseases of pets, livestock, and other animals.
-              </Text>
+          {jsonVets.length > 0 ? (
+            jsonVets.map((item, index) => (
+            <View style={[styles.vetsContainer, styles.secondary]} key={index}>
+              <View style={styles.dropShadow}>
+                <View style={[styles.container2]}>
+                  <Image source={{uri: item.vetImage}} style={styles.servicesImg} />
+                  <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
+                    {item.vetTeamName}
+                  </Text>
+                  <Text style={[styles.normalTxt, styles.fontReg]}>
+                    {item.vetDescription}
+                  </Text>
+                </View>
+              </View>
             </View>
-          </View>
-          <View style={styles.dropShadow}>
-            <View style={[styles.container2]}>
-              <Image source={imagePath.service2} style={styles.servicesImg} />
-              <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
-                Dr. Juan Dela Cruz's Team 2
-              </Text>
-              <Text style={[styles.normalTxt, styles.fontReg]}>
-                They diagnose, treat, and research medical conditions
-                and diseases of pets, livestock, and other animals.
-              </Text>
-            </View>
-          </View>
+            ))
+          ) : (
+              <Text>{error ? error : 'No data found.'}</Text>
+            )}
         </View>
       </ScrollView>
     );

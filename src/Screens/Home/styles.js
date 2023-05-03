@@ -13,6 +13,16 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+
+  vetsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
   },
 
   container2: {

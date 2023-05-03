@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
   },
   normalImg: {
     alignSelf: 'center',
-    width: '100%',
+    width: 400,
+    height: 400,
   },
 
   fontLight: {
