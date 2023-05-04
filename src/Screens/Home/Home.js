@@ -24,8 +24,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class Home extends React.Component {
   onSeaAllPressed = () => {
-    this.props.navigation.navigate(navigationStrings.SERVICES);
+    this.props.navigation.navigate(navigationStrings.SERVICES, {selectedIndex: 0});
   }
+  // onServicePressed = () => {
+  //   this.props.navigation.navigate(navigationStrings.SERVICES.{key});
+  // }
+  // onServicePressed = (key) => {
+  // this.props.navigation.navigate('Services', {key: index});
+  // }
+
 
   constructor(props) {
     super(props);
@@ -60,6 +67,11 @@ export default class Home extends React.Component {
       dataVets: [],
       jsonVets: [],
       errorVets: '',
+      services: [],
+      vets: [],
+      selectedService: '',
+      selectedVet: '',
+      test: null,
     };
   }
 
@@ -144,41 +156,14 @@ export default class Home extends React.Component {
       this.setState({ email }, () => {
         this.handlePress();
         this.loadData();
+        // this.loadTest();
       });
     } catch (error) {
       console.log(error);
     }
+
+    this.loadServices();
   }
-
-
-  // handlePress = () => {
-  //   console.log('Email:', this.state.email); // add this line to log the email value
-  //   fetch('http://10.0.2.2/april26/AppointPet-App/src/Screens/getUser.php', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       Email: this.state.email,
-  //     }),
-  //   })
-  //     .then((response) => response.text()) // <-- change response to text
-  //     .then((data) => {
-  //       console.log('Server Response:', data); // <-- add this line to see the response
-  //       const parsedData = JSON.parse(data); // <-- parse the response here
-  //       if (parsedData.Message === 'Success') {
-  //         this.setState({ message: parsedData.Message, firstName: parsedData.FirstName });
-  //       } else {
-  //         this.setState({ error: parsedData.Message });
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       this.setState({ error: 'An error occurred' });
-  //     });
-
-  // };
-
 
   handlePress = () => {
     fetch('http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/getUser.php', {
@@ -203,9 +188,31 @@ export default class Home extends React.Component {
         this.setState({ error: 'An error occurred', message: null, firstName: null });
       });
 
+    // fetch('http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/services.php')
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     if (data.Message === 'Success') {
+    //       const decodedData = data.Rows.map(row => ({
+    //         ...row,
+    //         serviceImage: `data:image/jpg;base64,${row.serviceImage}`,
+    //       }));
+    //       // console.log(data.Rows);
+    //       this.setState({ data: decodedData });
+    //     } else {
+    //       this.setState({ error: data.Message });
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //     this.setState({ error: 'An error occurred' });
+    //   });
+  };
+
+  loadServices = () => {
     fetch('http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/services.php')
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ services: data });
         if (data.Message === 'Success') {
           const decodedData = data.Rows.map(row => ({
             ...row,
@@ -217,10 +224,56 @@ export default class Home extends React.Component {
           this.setState({ error: data.Message });
         }
       })
-      .catch(error => {
-        console.log(error);
-        this.setState({ error: 'An error occurred' });
+      .catch((error) => {
+        console.error(error);
       });
+  };
+  loadVets = (Service) => {
+    fetch(`http://10.0.2.2/master3-april28/AppointPet-App/src/Screens/servicesVet.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        services: this.state.selectedService,
+      }),
+    })
+      .then((response_vets) => response_vets.json())
+      .then((data) => {
+        this.setState({ vets: data });
+      })
+      .catch((error) => {
+        console.error('loadvets:' + error);
+      });
+  };
+
+  // loadTest = () => {
+  //   fetch('http://your-server.com/test.php', {
+  //     method: 'GET',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //   .then((response) => response.text())
+  //   .then((test) => {
+  //     console.log(test); // Display the echoed string in the console
+  //     this.setState({ test: test });
+  //   })
+  //   .catch((error) => {
+  //     console.error(error);
+  //   });
+  // }
+
+  handleServiceChange = (value) => {
+    this.setState({ selectedService: value });
+    console.log(value);
+    this.loadVets(value);
+    console.log(this.loadVets(value));
+  };
+
+  handleVetChange = (value) => {
+    this.setState({ selectedVet: value });
   };
 
   loadData = () => {
@@ -247,6 +300,7 @@ export default class Home extends React.Component {
   render() {
     const { message, firstName, error, data, dataVets } = this.state;
     const { jsonVets, errorVets } = this.state;
+    const { services, vets, selectedService, selectedVet } = this.state;
 
     return (
       <ScrollView>
@@ -264,6 +318,7 @@ export default class Home extends React.Component {
             The best care for your pet is now available on a mobile app. Book an
             appointment today!
           </Text>
+          <Text>{this.state.test}</Text>
           <Modal
             animationType = {'fade'}
             transparent = {true}
@@ -348,16 +403,16 @@ export default class Home extends React.Component {
                       />
                     </KeyboardAvoidingView>
                   </View>
-
+{/* ////////////////////////////////////////////////////// */}
                   <View>
                     <Text style={[styles.header, styles.fontMedium, styles.white]}>Appointment Information</Text>
                     <KeyboardAvoidingView style={styles.margin}>
                       <View style={[styles.pickerContainer, styles.spaceTop]}>
                         <Picker
                           style={styles.pickerStyles}
-                          selectedValue = {this.state.service}
+                          selectedValue = {selectedService}
                           mode= "dropdown"
-                          onValueChange={(itemValue, itemPosition) => this.setState({service: itemValue, chosenIndex1: itemPosition})}>
+                          onValueChange={this.handleServiceChange}>
                           <Picker.Item style={[styles.pickerItemStyles, styles.pickerItemDisable]} label="Services" value="" enabled={false}/>
                           {data && data.map((row, i) => (
                             <Picker.Item  key={i} style={styles.pickerItemStyles} label={row.serviceName} value={row.serviceName}/>
@@ -367,9 +422,9 @@ export default class Home extends React.Component {
                       <View style={[styles.pickerContainer, styles.spaceTop]}>
                         <Picker
                           style={styles.pickerStyles}
-                          selectedValue = {this.state.vet}
+                          selectedValue = {selectedVet}
                           mode= "dropdown"
-                          onValueChange={(itemValue, itemPosition) => this.setState({vet: itemValue, chosenIndex2: itemPosition})}>
+                          onValueChange={this.handleVetChange}>
                           <Picker.Item style={[styles.pickerItemStyles, styles.pickerItemDisable]} label="Veterinarian's Team" value="" enabled={false}/>
                           {dataVets && dataVets.map((rowV, j) => (
                             <Picker.Item style={styles.pickerItemStyles} label={rowV.serviceVets} value={rowV.serviceVets}/>
@@ -378,7 +433,7 @@ export default class Home extends React.Component {
                           <Picker.Item style={styles.pickerItemStyles} label="Dr. Dela Cruz Team 3" value="Dr. Dela Cruz Team 3"/> */}
                         </Picker>
                       </View>
-
+{/* ////////////////////////////////////////// */}
                       <TouchableOpacity style={[styles.inputField, styles.inputDateTime]} onPress={() => this.setState({openSd:!this.state.openSd})}>
                         <Text style={styles.pickerItemStyles}> {'' + format(this.state.scheduleDate, 'yyyy-MM-dd')} </Text>
                         <Image source={imagePath.icCalendar} style={{height: 20, width: 20, justifyContent: 'flex-end', marginRight: 12}} />
@@ -434,10 +489,10 @@ export default class Home extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={[styles.container1, styles.secondary]}>
-        {data && data.map((rowS, k) => (
-          <View style={[styles.vetsContainer, styles.secondary]} key={k}>
+        {data && data.map((rowS, index) => (
+          <View style={[styles.vetsContainer, styles.secondary]}>
             <View style={styles.dropShadow}>
-              <TouchableOpacity style={[styles.container2]} onPress={()=>{this.onSeaAllPressed();}}>
+              <TouchableOpacity style={[styles.container2]} key={index} onPress={()=>{this.props.navigation.navigate('Services', {selectedIndex: index});}}>
                 <Image source={{uri: rowS.serviceImage}} style={styles.servicesImg} />
                 <Text style={[styles.header2, styles.fontMedium, {color: colors.primary}]}>
                   {rowS.serviceName}
@@ -473,8 +528,8 @@ export default class Home extends React.Component {
         </View>
         <View style={[styles.container1, styles.secondary]}>
           {jsonVets.length > 0 ? (
-            jsonVets.map((item, index) => (
-            <View style={[styles.vetsContainer, styles.secondary]} key={index}>
+            jsonVets.map((item, k) => (
+            <View style={[styles.vetsContainer, styles.secondary]} key={k}>
               <View style={styles.dropShadow}>
                 <View style={[styles.container2]}>
                   <Image source={{uri: item.vetImage}} style={styles.servicesImg} />

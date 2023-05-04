@@ -66,6 +66,7 @@ function Routes() {
       <Tab.Screen
         name={navigationStrings.SERVICES}
         component={Services}
+        initialParams={{ selectedIndex: 0 }}
         options={{
           tabBarIcon: ({focused}) => {
             return <Image style = {{
