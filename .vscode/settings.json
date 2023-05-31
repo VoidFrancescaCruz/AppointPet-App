@@ -1,0 +1,31 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "cSpell.words": [
+    "ADMINLOG",
+    "APIURL",
+    "Appointpet",
+    "arrayu",
+    "Birthdate",
+    "CHANGEPASSADMIN",
+    "CHANGEPASSWORD",
+    "CREATEACCOUNT",
+    "datetimepicker",
+    "Dela",
+    "Devs",
+    "ellipsize",
+    "Juancho",
+    "Juanna",
+    "ONBOARDINGA",
+    "ONBOARDINGB",
+    "ONBOARDINGC",
+    "ONBOARDINGD",
+    "PROFILEADMIN",
+    "Querry",
+    "sched",
+    "SENDOTP",
+    "SENDOTPADMIN",
+    "VERIFYACCOUNT",
+    "VERIFYEMAIL",
+    "VERIFYEMAILADMIN"
+  ]
+}
